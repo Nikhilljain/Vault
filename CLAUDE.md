@@ -73,7 +73,7 @@ python scripts/fetch_transcript.py "<video_url>"
 ### Step 2: Wiki Generation (Your Job)
 For each file in `/raw/` with `status: raw` in frontmatter:
 
-1. Read the raw source
+1. **Read the raw source IN FULL using chunked sequential reads.** Never generate wiki pages from partial reads. For files exceeding the token limit, read in sequential chunks (~200 lines or ~8000 chars at a time) covering the entire file. Take notes from each chunk, then write the wiki pages using the complete picture. Example: if a file has 500 lines, read lines 1-200, then 201-400, then 401-500.
 2. Create source summary in `wiki/sources/`
 3. Create or **update** entity pages in `wiki/entities/` (accumulative)
 4. Create or **update** concept pages in `wiki/concepts/` (accumulative)
