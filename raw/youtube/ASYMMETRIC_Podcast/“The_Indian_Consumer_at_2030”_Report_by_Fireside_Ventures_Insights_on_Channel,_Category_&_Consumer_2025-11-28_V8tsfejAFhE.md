@@ -11,7 +11,7 @@ duration: '1:15:52'
 language: hi
 is_auto_generated: true
 ingested_date: '2026-04-08'
-status: raw
+status: wiki_processed
 ---
 
 # “The Indian Consumer at 2030” Report by Fireside Ventures: Insights on Channel, Category & Consumer

@@ -3,7 +3,7 @@ page_type: concept
 name: "D2C Brand Landscape India"
 aliases: [D2C India, new-age brands, direct-to-consumer India]
 tags: [d2c, brands, india, e-commerce, marketplace]
-source_count: 1
+source_count: 2
 last_updated: 2026-04-08
 ---
 
@@ -33,8 +33,29 @@ A persistent tension in Indian D2C: no brand is more than 20-25% D2C (own websit
 
 The 5-10 year view: D2C-only $1B brands will emerge in India, but the current incentive structure (VC metrics require market share → requires marketplace presence) works against it. The US model also faces pressure from Shein, Temu, and TikTok Shop which are eroding brand.com's dominance.
 
+## China-India Consumer IPO Parallel
+
+China's consumer IPO trajectory provides a roadmap for India:
+- China 1990-2000: negligible consumer IPOs (tail phase)
+- China 2000-2010: GDP per capita 2.5x-ed → consumer index 5x → ~400-450 consumer IPOs (~40/year)
+- China 2010-2015: consumer index another 5x → ~4,000 consumer IPOs (800-900/year)
+- India's GDP per capita now ~$2,500, equivalent to China ~2002-2003
+- Projection: at least 2,000 consumer IPOs in India over next 15 years
+- Fashion alone is $125B with only $25B organized — massive runway
+
+— [[Source: "The Indian Consumer at 2030" Report by Fireside Ventures]]
+
+## Depth over Breadth as Winning Strategy
+
+The old belief that "you can't build a big business staying in one niche" is now false. Niche depth at 5M customers can build ₹500 Cr+ businesses profitably. See [[Depth_over_Breadth|Depth over Breadth]] for the full framework — [[Source: "The Indian Consumer at 2030" Report by Fireside Ventures]].
+
+## GT Margin Re-Rating Risk
+
+Traditional FMCG ran ~25% EBIT margins due to General Trade (GT) dominance. In US/UK/Canada with organized trade, brands do 12-15% EBIT max. As India shifts to modern trade/e-commerce/quick commerce, structural EBIT compression is plausible but won't happen within 5 years — India won't go beyond ~35% organized trade due to political structure protecting the trader community — [[Source: "The Indian Consumer at 2030" Report by Fireside Ventures]].
+
 ## Related Concepts
 [[India Consumption Bifurcation]], [[Quick Commerce]], [[Creator Commerce]], [[Startup IPO Waves India]]
 
 ## Sources
 - [[Source: Deep Dive into India's Consumption Story This Festive Season]] (ASYMMETRIC Podcast, 2025-10-17)
+- [[Source: "The Indian Consumer at 2030" Report by Fireside Ventures]] (ASYMMETRIC Podcast, 2025-11-28)

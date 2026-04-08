@@ -11,7 +11,7 @@ duration: '1:00:33'
 language: hi
 is_auto_generated: true
 ingested_date: '2026-04-08'
-status: raw
+status: wiki_processed
 ---
 
 # Bharat Consumer Insights: AI as the Adoption Bridge and Understanding Gen Z & Gen Alpha

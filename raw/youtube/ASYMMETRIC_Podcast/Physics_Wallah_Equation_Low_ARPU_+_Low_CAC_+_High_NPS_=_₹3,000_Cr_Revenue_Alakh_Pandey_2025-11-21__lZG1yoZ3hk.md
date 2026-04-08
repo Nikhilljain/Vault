@@ -11,7 +11,7 @@ duration: '40:29'
 language: hi
 is_auto_generated: true
 ingested_date: '2026-04-08'
-status: raw
+status: wiki_processed
 ---
 
 # Physics Wallah Equation: Low ARPU + Low CAC + High NPS = ₹3,000 Cr Revenue | Alakh Pandey

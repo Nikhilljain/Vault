@@ -11,7 +11,7 @@ duration: '57:36'
 language: hi
 is_auto_generated: true
 ingested_date: '2026-04-08'
-status: raw
+status: wiki_processed
 ---
 
 # Helmer’s 7 Powers: Choosing Your Moat Vector & What Your AOP Must Optimize For (What, How, When)

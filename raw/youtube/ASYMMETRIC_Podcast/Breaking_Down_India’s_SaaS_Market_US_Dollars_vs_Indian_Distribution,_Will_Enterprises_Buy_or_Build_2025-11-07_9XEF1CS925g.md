@@ -11,7 +11,7 @@ duration: '1:16:43'
 language: en
 is_auto_generated: true
 ingested_date: '2026-04-08'
-status: raw
+status: wiki_processed
 ---
 
 # Breaking Down India’s SaaS Market: US Dollars vs Indian Distribution, Will Enterprises Buy or Build

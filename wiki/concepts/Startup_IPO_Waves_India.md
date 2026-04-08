@@ -3,7 +3,7 @@ page_type: concept
 name: "Startup IPO Waves India"
 aliases: [IPO Wave 3, Indian tech IPOs, startup listings]
 tags: [ipo, public-markets, startups, venture-capital, india]
-source_count: 1
+source_count: 2
 last_updated: 2026-04-08
 ---
 
@@ -45,6 +45,16 @@ Startups are only **3-4% by number** and **10-15% by value** of total IPOs in In
 
 Two-thirds of startups that went public are NOT yet profitable. Yet public markets are rewarding them because retail capital is abundant and the startup index is outperforming. The question is whether this is sustainable or whether it mirrors 2021's irrational exuberance — this time the hosts argue the underlying companies are stronger.
 
+## SaaS IPO Sub-Wave (Expected ~2026-2027)
+
+A distinct sub-wave within Wave 3 is forming around Indian SaaS companies:
+- Companies of the 2014-2016 vintage (first decade of Indian SaaS) are reaching IPO readiness
+- [[MoEngage]] raised $100M, potentially flipping to India for IPO
+- [[CleverTap]] publicly discussing IPO plans
+- [[Traction]] proved Indian public markets can value SaaS — listed at just $10M revenue
+- Expectation: Indian SaaS index ETF once 20-30+ SaaS companies are listed
+- Key thesis: software businesses have "fearsome margins" (80-92% gross margin), making them attractive public market assets — [[Source: Breaking Down India's SaaS Market — US Dollars vs Indian Distribution]]
+
 ## Structural Impact
 
 Each wave creates a flywheel: successful IPOs → wealth creation → more people inspired to start companies → more angel/venture capital → more startups → more IPOs. The [[Flipkart]] acquisition and [[Zomato]] listing were key catalysts for earlier waves — [[Source: Breaking Down India's IPO Wave 3, The Series C Drought]].
@@ -54,3 +64,4 @@ Each wave creates a flywheel: successful IPOs → wealth creation → more peopl
 
 ## Sources
 - [[Source: Breaking Down India's IPO Wave 3, The Series C Drought]] (ASYMMETRIC Podcast, 2025-10-24)
+- [[Source: Breaking Down India's SaaS Market — US Dollars vs Indian Distribution]] (ASYMMETRIC Podcast, 2025-11-07)

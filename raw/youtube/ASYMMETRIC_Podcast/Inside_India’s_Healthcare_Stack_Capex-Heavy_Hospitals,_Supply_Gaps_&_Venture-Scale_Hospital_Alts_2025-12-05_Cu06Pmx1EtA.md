@@ -11,7 +11,7 @@ duration: '1:18:45'
 language: hi
 is_auto_generated: true
 ingested_date: '2026-04-08'
-status: raw
+status: wiki_processed
 ---
 
 # Inside India’s Healthcare Stack: Capex-Heavy Hospitals, Supply Gaps & Venture-Scale Hospital Alts

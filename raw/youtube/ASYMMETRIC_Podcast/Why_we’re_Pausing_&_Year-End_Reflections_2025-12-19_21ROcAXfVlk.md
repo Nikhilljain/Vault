@@ -10,7 +10,7 @@ duration: '56:24'
 language: hi
 is_auto_generated: true
 ingested_date: '2026-04-08'
-status: raw
+status: wiki_processed
 ---
 
 # Why we’re Pausing & Year-End Reflections
