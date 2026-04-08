@@ -15,6 +15,7 @@ from youtube_transcript_api._errors import (
     NoTranscriptFound,
     TranscriptsDisabled,
     VideoUnavailable,
+    RequestBlocked,
 )
 
 from utils import (
@@ -124,7 +125,7 @@ def fetch_transcript_for_video(ytt_api, video_id: str, languages: list[str]):
     return segments, lang_code or 'unknown', is_auto
 
 
-def scrape_channel(channel_url: str, limit: int | None, languages: list[str], delay: float, min_duration_secs: int = 1800):
+def scrape_channel(channel_url: str, limit: int | None, languages: list[str], delay: float, min_duration_secs: int = 1800, cookies_path: str | None = None):
     channel_kwargs = extract_channel_identifier(channel_url)
 
     print(f"Fetching video list from {channel_url} ...")
@@ -159,7 +160,20 @@ def scrape_channel(channel_url: str, limit: int | None, languages: list[str], de
 
     existing_ids = get_existing_video_ids(channel_dir)
     error_file = channel_dir / '_scrape_errors.json'
-    ytt_api = YouTubeTranscriptApi()
+    ytt_kwargs = {}
+    if cookies_path:
+        cookies_file = Path(cookies_path)
+        if not cookies_file.exists():
+            print(f"ERROR: Cookies file not found: {cookies_path}")
+            return
+        import http.cookiejar, requests as _requests
+        cj = http.cookiejar.MozillaCookieJar(cookies_path)
+        cj.load(ignore_discard=True, ignore_expires=True)
+        session = _requests.Session()
+        session.cookies = cj
+        ytt_kwargs['http_client'] = session
+        print(f"Using cookies from: {cookies_path} ({len(cj)} cookies loaded)")
+    ytt_api = YouTubeTranscriptApi(**ytt_kwargs)
 
     scraped = 0
     skipped = 0
@@ -186,6 +200,13 @@ def scrape_channel(channel_url: str, limit: int | None, languages: list[str], de
 
         try:
             segments, lang_code, is_auto = fetch_transcript_for_video(ytt_api, vid, languages)
+        except RequestBlocked as e:
+            print(f"           BLOCKED: YouTube is blocking requests from this IP.")
+            if not cookies_path:
+                print("           TIP: Re-run with --cookies path/to/cookies.txt to bypass.")
+            log_scrape_error(error_file, vid, title, f'IP blocked: {e}')
+            failed += 1
+            continue
         except (NoTranscriptFound, TranscriptsDisabled, VideoUnavailable) as e:
             print(f"           FAILED: {e}")
             log_scrape_error(error_file, vid, title, str(e))
@@ -248,11 +269,12 @@ def main():
     parser.add_argument('channel_url', help='YouTube channel URL (e.g. https://www.youtube.com/@handle)')
     parser.add_argument('--limit', type=int, default=None, help='Max videos to fetch (default: all)')
     parser.add_argument('--lang', nargs='+', default=['en', 'hi', 'en-IN'], help='Language priority (default: en hi en-IN)')
-    parser.add_argument('--delay', type=float, default=1.0, help='Delay between transcript fetches in seconds (default: 1.0)')
+    parser.add_argument('--delay', type=float, default=3.0, help='Delay between transcript fetches in seconds (default: 3.0)')
     parser.add_argument('--min-duration', type=int, default=30, help='Minimum video duration in minutes (default: 30). Set to 0 to disable.')
+    parser.add_argument('--cookies', type=str, default=None, help='Path to Netscape-format cookies.txt file (exported from browser) to bypass YouTube IP blocks.')
     args = parser.parse_args()
 
-    scrape_channel(args.channel_url, args.limit, args.lang, args.delay, args.min_duration * 60)
+    scrape_channel(args.channel_url, args.limit, args.lang, args.delay, args.min_duration * 60, args.cookies)
 
 
 if __name__ == '__main__':
