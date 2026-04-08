@@ -22,6 +22,7 @@ def sanitize_filename(title: str) -> str:
     """Replace spaces with _ and strip non-filesystem-safe characters."""
     name = title.strip()
     name = re.sub(r'[<>:"/\\|?*\x00-\x1f]', '', name)  # strip illegal chars
+    name = re.sub(r'[^\x20-\x7E]', '', name)             # strip non-ASCII chars
     name = re.sub(r'\s+', '_', name)                      # spaces → underscores
     name = re.sub(r'_+', '_', name)                        # collapse runs
     name = name.strip('_.')                                # trim edges
