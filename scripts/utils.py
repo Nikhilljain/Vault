@@ -7,7 +7,11 @@ import json
 from datetime import datetime, timedelta
 from pathlib import Path
 
+import requests
 import yaml
+
+_INNERTUBE_URL = 'https://www.youtube.com/youtubei/v1/player?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8'
+_INNERTUBE_CONTEXT = {'client': {'clientName': 'WEB', 'clientVersion': '2.20240101'}}
 
 
 # ---------------------------------------------------------------------------
@@ -107,6 +111,38 @@ def parse_relative_date(text: str) -> str:
 
 
 # ---------------------------------------------------------------------------
+# YouTube metadata via innertube API
+# ---------------------------------------------------------------------------
+
+def fetch_video_metadata(video_id: str) -> dict:
+    """Fetch exact publish date, channel name, and channel ID via YouTube innertube API.
+
+    Returns dict with keys: publish_date, channel_name, channel_id.
+    Values are empty strings on failure.
+    """
+    result = {'publish_date': '', 'channel_name': '', 'channel_id': ''}
+    try:
+        resp = requests.post(
+            _INNERTUBE_URL,
+            json={'context': _INNERTUBE_CONTEXT, 'videoId': video_id},
+            headers={'User-Agent': 'Mozilla/5.0'},
+            timeout=10,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        mf = data.get('microformat', {}).get('playerMicroformatRenderer', {})
+        # publishDate is ISO 8601: "2024-03-15T09:22:18-07:00"
+        pub = mf.get('publishDate', '')
+        if pub:
+            result['publish_date'] = pub[:10]  # YYYY-MM-DD
+        result['channel_name'] = mf.get('ownerChannelName', '')
+        result['channel_id'] = mf.get('externalChannelId', '')
+    except Exception:
+        pass
+    return result
+
+
+# ---------------------------------------------------------------------------
 # Resume support
 # ---------------------------------------------------------------------------
 
@@ -130,6 +166,27 @@ def get_existing_video_ids(channel_dir: Path) -> set:
 # ---------------------------------------------------------------------------
 # Transcript cleaning
 # ---------------------------------------------------------------------------
+
+def parse_duration_seconds(duration_str: str) -> int | None:
+    """Convert a duration string like '1:23:45' or '45:23' to total seconds.
+
+    Returns None if parsing fails.
+    """
+    if not duration_str or duration_str == 'unknown':
+        return None
+    parts = duration_str.strip().split(':')
+    try:
+        parts = [int(p) for p in parts]
+    except ValueError:
+        return None
+    if len(parts) == 3:
+        return parts[0] * 3600 + parts[1] * 60 + parts[2]
+    if len(parts) == 2:
+        return parts[0] * 60 + parts[1]
+    if len(parts) == 1:
+        return parts[0]
+    return None
+
 
 def clean_transcript(segments: list[dict]) -> str:
     """Join transcript segments into clean paragraph text.

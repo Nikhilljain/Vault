@@ -20,8 +20,10 @@ from youtube_transcript_api._errors import (
 from utils import (
     clean_transcript,
     extract_channel_identifier,
+    fetch_video_metadata,
     get_existing_video_ids,
     log_scrape_error,
+    parse_duration_seconds,
     parse_relative_date,
     sanitize_filename,
     write_raw_markdown,
@@ -122,7 +124,7 @@ def fetch_transcript_for_video(ytt_api, video_id: str, languages: list[str]):
     return segments, lang_code or 'unknown', is_auto
 
 
-def scrape_channel(channel_url: str, limit: int | None, languages: list[str], delay: float):
+def scrape_channel(channel_url: str, limit: int | None, languages: list[str], delay: float, min_duration_secs: int = 1800):
     channel_kwargs = extract_channel_identifier(channel_url)
 
     print(f"Fetching video list from {channel_url} ...")
@@ -143,10 +145,15 @@ def scrape_channel(channel_url: str, limit: int | None, languages: list[str], de
     total = len(videos)
     print(f"Found {total} video(s).")
 
-    # Determine channel name: prefer video metadata, fallback to URL parsing
-    channel_display = get_channel_name_from_video(videos[0]) or channel_name_from_url(channel_url)
+    # Fetch exact channel metadata via innertube API (one request)
+    first_meta = fetch_video_metadata(videos[0]['videoId'])
+    channel_display = (
+        first_meta['channel_name']
+        or get_channel_name_from_video(videos[0])
+        or channel_name_from_url(channel_url)
+    )
+    channel_id = first_meta['channel_id'] or get_channel_id_from_video(videos[0])
     channel_name = sanitize_filename(channel_display)
-    channel_id = get_channel_id_from_video(videos[0])
     channel_dir = RAW_YT_DIR / channel_name
     channel_dir.mkdir(parents=True, exist_ok=True)
 
@@ -165,6 +172,13 @@ def scrape_channel(channel_url: str, limit: int | None, languages: list[str], de
 
         if vid in existing_ids:
             print(f"  [{i}/{total}] SKIP (exists): {title}")
+            skipped += 1
+            continue
+
+        duration_str = get_video_duration(video)
+        duration_secs = parse_duration_seconds(duration_str)
+        if min_duration_secs > 0 and duration_secs is not None and duration_secs < min_duration_secs:
+            print(f"  [{i}/{total}] SKIP (too short: {duration_str}): {title}")
             skipped += 1
             continue
 
@@ -190,7 +204,9 @@ def scrape_channel(channel_url: str, limit: int | None, languages: list[str], de
             failed += 1
             continue
 
-        publish_date = parse_relative_date(get_publish_date_text(video))
+        # Fetch exact publish date via innertube (already-scraped videos were skipped above)
+        vid_meta = fetch_video_metadata(vid)
+        publish_date = vid_meta['publish_date'] or parse_relative_date(get_publish_date_text(video))
         duration = get_video_duration(video)
         safe_title = sanitize_filename(title)
         filename = f"{safe_title}_{publish_date}_{vid}.md"
@@ -233,9 +249,10 @@ def main():
     parser.add_argument('--limit', type=int, default=None, help='Max videos to fetch (default: all)')
     parser.add_argument('--lang', nargs='+', default=['en', 'hi', 'en-IN'], help='Language priority (default: en hi en-IN)')
     parser.add_argument('--delay', type=float, default=1.0, help='Delay between transcript fetches in seconds (default: 1.0)')
+    parser.add_argument('--min-duration', type=int, default=30, help='Minimum video duration in minutes (default: 30). Set to 0 to disable.')
     args = parser.parse_args()
 
-    scrape_channel(args.channel_url, args.limit, args.lang, args.delay)
+    scrape_channel(args.channel_url, args.limit, args.lang, args.delay, args.min_duration * 60)
 
 
 if __name__ == '__main__':
